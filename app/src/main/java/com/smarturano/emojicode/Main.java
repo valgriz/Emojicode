@@ -5,9 +5,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 public class Main extends AppCompatActivity {
@@ -41,6 +43,30 @@ public class Main extends AppCompatActivity {
 
             }
         });
+
+        final ImageButton sendImageButton = (ImageButton) findViewById(R.id.sendImageButton);
+        sendImageButton.setBackgroundResource(R.drawable.send_button_decode_0);
+        sendImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+            }
+        });
+
+        sendImageButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    sendImageButton.setBackgroundResource(R.drawable.send_button_decode_1);
+                } else if(event.getAction() == MotionEvent.ACTION_UP){
+                    sendImageButton.setBackgroundResource(R.drawable.send_button_decode_0);
+                }
+                return false;
+            }
+        });
+
+
 
 
     }
