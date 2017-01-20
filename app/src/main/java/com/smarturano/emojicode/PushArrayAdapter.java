@@ -50,12 +50,22 @@ public class PushArrayAdapter extends ArrayAdapter{
         }
         singleMessageContainer = (LinearLayout) row.findViewById(R.id.singleMessageContainer);
 
+
+
+
+        //android:paddingRight="45dip"
         TEMessage teMessage = getItem(position);
         chatText = (TextView) row.findViewById(R.id.singleMessage);
         chatText.setText(teMessage.message);
-        chatText.setBackgroundResource(teMessage.left ? R.drawable.chat_bubble_a_png : R.drawable.chat_bubble_a_png);
-        singleMessageContainer.setGravity(teMessage.left ? Gravity.LEFT : Gravity.RIGHT);
-
+        if(teMessage.left){
+            chatText.setBackgroundResource(R.drawable.chat_bubble_l);
+            singleMessageContainer.setGravity(Gravity.LEFT);
+            singleMessageContainer.setPadding(0,0,200,0);
+        } else {
+            chatText.setBackgroundResource(R.drawable.chat_bubble_r);
+            singleMessageContainer.setGravity(Gravity.RIGHT);
+            singleMessageContainer.setPadding(200,0,0,0);
+        }
         return row;
     }
 

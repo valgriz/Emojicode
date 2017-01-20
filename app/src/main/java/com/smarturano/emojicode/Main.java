@@ -93,7 +93,20 @@ public class Main extends AppCompatActivity {
     }
 
     public void pushMessage(){
-        pushArrayAdapter.add(new TEMessage(true, input.getText().toString()));
+        String message = input.getText().toString();
+        //check if message is emojis or letters
+        char mm = message.charAt(0);
+        if((mm >= 33) && (mm <=90)){
+            //Numbers and uppercase
+            pushArrayAdapter.add(new TEMessage(true, message));
+        } else if((mm >= 97) && (mm <=122)){
+            //Lowercase
+            pushArrayAdapter.add(new TEMessage(false, message));
+        }
+
+
+
+        //After message has been converted
         input.setText("");
         countTextView.setText("0/160");
     }
