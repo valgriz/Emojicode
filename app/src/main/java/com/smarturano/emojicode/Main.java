@@ -88,23 +88,25 @@ public class Main extends AppCompatActivity {
                 listView.setSelection(pushArrayAdapter.getCount() - 1);
             }
         });
-
-
     }
 
+    private final String emo_regex = "([\\u20a0-\\u32ff\\ud83c\\udc00-\\ud83d\\udeff\\udbb9\\udce5-\\udbb9\\udcee])";
+
     public void pushMessage(){
+        if(!input.getText().toString().equals("")){
         String message = input.getText().toString();
         //check if message is emojis or letters
-        char mm = message.charAt(0);
-        if((mm >= 33) && (mm <=90)){
-            //Numbers and uppercase
-            pushArrayAdapter.add(new TEMessage(true, message));
-        } else if((mm >= 97) && (mm <=122)){
-            //Lowercase
-            pushArrayAdapter.add(new TEMessage(false, message));
+            String ms = new String("");
+            if(message.length()>=2) {
+                ms = message.substring(0, 2);
+            }
+            char mm = message.charAt(0);
+            if(ms.matches(emo_regex)){ //character is an emoji
+                pushArrayAdapter.add(new TEMessage(false, message));
+            } else if((mm >= 33) && (mm <= 126)){ //character is a letter
+                pushArrayAdapter.add(new TEMessage(true, message));
+            }
         }
-
-
 
         //After message has been converted
         input.setText("");

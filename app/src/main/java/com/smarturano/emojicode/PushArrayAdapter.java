@@ -1,5 +1,7 @@
 package com.smarturano.emojicode;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,10 +26,11 @@ public class PushArrayAdapter extends ArrayAdapter{
     private TextView chatText;
     private List teMessageList = new ArrayList();
     private LinearLayout singleMessageContainer;
+    Context context;
 
     public PushArrayAdapter(Context context, int textViewResourceID){
         super(context, textViewResourceID);
-
+        this.context = context;
     }
 
     public int getCount(){
@@ -49,12 +53,7 @@ public class PushArrayAdapter extends ArrayAdapter{
             row = inflater.inflate(R.layout.message_a, parent, false);
         }
         singleMessageContainer = (LinearLayout) row.findViewById(R.id.singleMessageContainer);
-
-
-
-
-        //android:paddingRight="45dip"
-        TEMessage teMessage = getItem(position);
+        final TEMessage teMessage = getItem(position);
         chatText = (TextView) row.findViewById(R.id.singleMessage);
         chatText.setText(teMessage.message);
         if(teMessage.left){
@@ -66,6 +65,17 @@ public class PushArrayAdapter extends ArrayAdapter{
             singleMessageContainer.setGravity(Gravity.RIGHT);
             singleMessageContainer.setPadding(200,0,0,0);
         }
+        singleMessageContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("Emojicode message", teMessage.message);
+                clipboard.setPrimaryClip(clip);
+                Toast toast = Toast.makeText(context, "Message has been copied to clipboard.", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER, 0, -100);
+                toast.show();
+            }
+        });
         return row;
     }
 
