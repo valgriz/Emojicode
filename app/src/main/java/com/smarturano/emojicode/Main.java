@@ -1,5 +1,6 @@
 package com.smarturano.emojicode;
 
+import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,11 +9,19 @@ import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 public class Main extends AppCompatActivity {
+
+    TextView countTextView;
+    EditText input;
+    PushArrayAdapter pushArrayAdapter;
+    ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,12 +30,13 @@ public class Main extends AppCompatActivity {
         View mainView = findViewById(R.id.activity_main);
         mainView.getRootView().setBackgroundColor(getResources().getColor(R.color.colorS15));
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-        final EditText input = (EditText) findViewById(R.id.input);
+        input = (EditText) findViewById(R.id.input);
         input.setSelection(0);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
-        final TextView countTextView = (TextView) findViewById(R.id.countTextView);
-
+        countTextView = (TextView) findViewById(R.id.countTextView);
+        listView = (ListView) findViewById(R.id.messagesScrollList);
+        listView.setAdapter(pushArrayAdapter);
         input.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -50,6 +60,7 @@ public class Main extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                    pushMessage();
 
             }
         });
@@ -65,9 +76,25 @@ public class Main extends AppCompatActivity {
                 return false;
             }
         });
+        pushArrayAdapter = new PushArrayAdapter(getApplicationContext(), R.layout.message_a);
+        listView.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+        listView.setAdapter(pushArrayAdapter);
+
+        //to scroll the list view to bottom on data change
+        pushArrayAdapter.registerDataSetObserver(new DataSetObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                listView.setSelection(pushArrayAdapter.getCount() - 1);
+            }
+        });
 
 
+    }
 
-
+    public void pushMessage(){
+        pushArrayAdapter.add(new TEMessage(true, input.getText().toString()));
+        input.setText("");
+        countTextView.setText("0/160");
     }
 }

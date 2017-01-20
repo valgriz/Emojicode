@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content" >
-
-    <LinearLayout
-        android:id="@+id/singleMessageContainer"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+    android:layout_height="wrap_content"
+    android:id="@+id/singleMessageContainer"
+    android:paddingRight="45dip">
 
         <TextView
             android:id="@+id/singleMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="5dip"
+            android:layout_margin="5dp"
             android:background="@drawable/chat_bubble_a_png"
             android:paddingLeft="10dip"
-            android:text="Hello bubbles!"
+            android:paddingRight="10dip"
+            android:paddingTop="8dip"
+            android:paddingBottom="8dip"
+
+            android:text=""
+            android:textSize="9pt"
             android:textColor="@android:color/primary_text_light" />
-    </LinearLayout>
+
 
 </LinearLayout>

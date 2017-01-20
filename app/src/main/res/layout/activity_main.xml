@@ -74,72 +74,19 @@
         </LinearLayout>
     </LinearLayout>
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:backgroundTint="@color/colorS14"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_above="@+id/inner_layout">
-        <LinearLayout
+
+        <ListView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <Button
-                android:layout_width="200dp"
-                android:layout_height="100dp"
-                android:text="A"
-                android:background="@color/colorS11"/>
-
-            <Button
-                android:layout_width="200dp"
-                android:layout_height="100dp"
-                android:text="B"/>
-
-            <Button
-                android:layout_width="200dp"
-                android:layout_height="100dp"
-                android:text="C"/>
-
-            <Button
-                android:layout_width="200dp"
-                android:layout_height="100dp"
-                android:text="D"/>
-
-            <Button
-                android:layout_width="200dp"
-                android:layout_height="100dp"
-                android:text="E"/>
-
-            <Button
-                android:layout_width="200dp"
-                android:layout_height="100dp"
-                android:text="F"/>
-
-            <Button
-                android:layout_width="200dp"
-                android:layout_height="100dp"
-                android:text="G"/>
-
-            <Button
-                android:layout_width="200dp"
-                android:layout_height="100dp"
-                android:text="H"/>
-
-            <Button
-                android:layout_width="200dp"
-                android:layout_height="100dp"
-                android:text="I"/>
-
-            <Button
-                android:layout_width="200dp"
-                android:layout_height="100dp"
-                android:text="J"/>
+            android:layout_height="match_parent"
+            android:id="@+id/messagesScrollList"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_above="@+id/inner_layout"
+            android:divider="@null">
 
 
-        </LinearLayout>
-    </ScrollView>
+        </ListView>
 
 
 </RelativeLayout>
