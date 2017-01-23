@@ -90,7 +90,7 @@ public class Main extends AppCompatActivity {
         });
     }
 
-    private final String emo_regex = "([\\u20a0-\\u32ff\\ud83c\\udc00-\\ud83d\\udeff\\udbb9\\udce5-\\udbb9\\udcee])";
+    private final String emo_regex = "([[\\uD83C-\\uDBFF\\uDC00-\\uDFFF]+])";
 
     public void pushMessage(){
         if(!input.getText().toString().equals("")){
@@ -102,9 +102,15 @@ public class Main extends AppCompatActivity {
             }
             char mm = message.charAt(0);
             if(ms.matches(emo_regex)){ //character is an emoji
-                pushArrayAdapter.add(new TEMessage(false, message));
+                String ps = Converter.emojiToText(message);
+                if(!ps.equals("")) {
+                    pushArrayAdapter.add(new TEMessage(true, ps));
+                }
             } else if((mm >= 33) && (mm <= 126)){ //character is a letter
-                pushArrayAdapter.add(new TEMessage(true, message));
+                String ps = Converter.textToEmoji(message);
+                if(!ps.equals("")) {
+                    pushArrayAdapter.add(new TEMessage(false, ps));
+                }
             }
         }
 
