@@ -51,13 +51,38 @@ public class Converter {
             //int mmVal = (int) Character.valueOf(mm);
             if(ms.matches(emo_regex)){ //character is an emoji
                 String ps = ms;
+                char cs[] = ps.toCharArray();
                 if(!ps.equals("")) {
-                    output += new String(ps);
+                    int emojiCode = ("" + cs[0] + cs[1]).codePointAt(0);
+                    int asciiIntValue = getIndexInEmojiArray(emojiCode);
+                    output += new String("" + ((char) (asciiIntValue + 33)));
+                    //output = String.format("0x%08x", output);
                 }
             } else{
                 output += new String(" ");
             }
         }
+        return output;
+    }
+
+    static int getIndexInEmojiArray(int emojiCode){
+        for(int i = 0; i < emojiArray.length; i++){
+            if(emojiArray[i] == emojiCode){
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public String encode(String input){
+        String output;
+        output = input;
+        return output;
+    }
+
+    public String decode(String input){
+        String output;
+        output = input;
         return output;
     }
 }
