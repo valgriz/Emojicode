@@ -25,8 +25,9 @@ public class Converter {
                                 0x1F64A, 0x1F466, 0x1F467, 0x1F469, 0x1F474, 0x1F475,
                                 0x1F476, 0x1F47C, 0x1F46E};
 
-    static String textToEmoji(String input){
+    static String textToEmoji(String in){
         String ts;
+        String input = encode(in);
         String output = "";
         for(int i = 0; i < input.length(); i++){
             char mm = input.charAt(i);
@@ -43,8 +44,9 @@ public class Converter {
         return output;
     }
 
-    static String emojiToText(String input){
+    static String emojiToText(String in){
         String ts;
+        String input = in;
         String output = "";
         for(int i = 0; i < input.length()/2; i++){
             String ms = input.substring((2 * i), (2 * i) + 2);
@@ -62,7 +64,7 @@ public class Converter {
                 output += new String(" ");
             }
         }
-        return output;
+        return decode(output);
     }
 
     static int getIndexInEmojiArray(int emojiCode){
@@ -74,15 +76,19 @@ public class Converter {
         return -1;
     }
 
-    public String encode(String input){
-        String output;
-        output = input;
+    public static  String encode(String input){
+        String output = "";
+        for(int i = 0; i < input.length(); i++){
+            output += new String("" + Mapper.map(input.charAt(i), i));
+        }
         return output;
     }
 
-    public String decode(String input){
-        String output;
-        output = input;
+    public static String decode(String input){
+        String output = "";
+        for(int i = 0; i < input.length(); i++){
+            output += new String("" + Mapper.unmap(input.charAt(i), i));
+        }
         return output;
     }
 }

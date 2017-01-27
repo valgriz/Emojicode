@@ -22,6 +22,7 @@ public class Main extends AppCompatActivity {
     EditText input;
     PushArrayAdapter pushArrayAdapter;
     ListView listView;
+    Boolean free = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +47,12 @@ public class Main extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 countTextView.setText(input.getText().length() + "/160");
+                if(free){
+                    if(input.getText().length() > 160){
+                        input.setText(input.getText().subSequence(0, input.length()-1));
+                        input.setSelection(input.length()-1);
+                    }
+                }
             }
 
             @Override
