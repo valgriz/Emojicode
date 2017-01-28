@@ -39,6 +39,14 @@ public class PushArrayAdapter extends ArrayAdapter{
 
     public void add(TEMessage teMessage){
         teMessageList.add(teMessage);
+        if(teMessage.left == false){
+            ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("Emojicode message", teMessage.message);
+            clipboard.setPrimaryClip(clip);
+            Toast toast = Toast.makeText(context, "Message has been copied to clipboard.", Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER, 0, -100);
+            toast.show();
+        }
         super.add(teMessage);
     }
 
@@ -76,6 +84,7 @@ public class PushArrayAdapter extends ArrayAdapter{
                 toast.show();
             }
         });
+
         return row;
     }
 

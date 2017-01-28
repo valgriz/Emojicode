@@ -1,11 +1,19 @@
 package com.smarturano.emojicode;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.content.Intent;
 import android.database.DataSetObserver;
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -16,6 +24,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import static android.content.ClipDescription.MIMETYPE_TEXT_PLAIN;
+
 public class Main extends AppCompatActivity {
 
     TextView countTextView;
@@ -23,6 +33,7 @@ public class Main extends AppCompatActivity {
     PushArrayAdapter pushArrayAdapter;
     ListView listView;
     Boolean free = true;
+    Boolean buttonPaste = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +49,8 @@ public class Main extends AppCompatActivity {
         countTextView = (TextView) findViewById(R.id.countTextView);
         listView = (ListView) findViewById(R.id.messagesScrollList);
         listView.setAdapter(pushArrayAdapter);
+        final ImageButton sendImageButton = (ImageButton) findViewById(R.id.sendImageButton);
+
         input.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -49,9 +62,20 @@ public class Main extends AppCompatActivity {
                 countTextView.setText(input.getText().length() + "/160");
                 if(free){
                     if(input.getText().length() > 160){
-                        input.setText(input.getText().subSequence(0, input.length()-1));
-                        input.setSelection(input.length()-1);
+                        String message = input.getText().toString();
+                        String ms = message.substring(0, 2);
+                        if(!ms.matches(emo_regex)){ //character is an emoji
+                            input.setText(input.getText().subSequence(0, input.length()-1));
+                            input.setSelection(input.length()-1);
+                        }
                     }
+                }
+                if(input.getText().length() == 0){
+                    buttonPaste = true;
+                    sendImageButton.setBackgroundResource(R.drawable.send_button_paste_0);
+                } else {
+                    buttonPaste = false;
+                    sendImageButton.setBackgroundResource(R.drawable.send_button_decode_0);
                 }
             }
 
@@ -61,14 +85,29 @@ public class Main extends AppCompatActivity {
             }
         });
 
-        final ImageButton sendImageButton = (ImageButton) findViewById(R.id.sendImageButton);
-        sendImageButton.setBackgroundResource(R.drawable.send_button_decode_0);
+        if(buttonPaste){
+            sendImageButton.setBackgroundResource(R.drawable.send_button_paste_0);
+        } else {
+            sendImageButton.setBackgroundResource(R.drawable.send_button_decode_0);
+        }
+
         sendImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                    pushMessage();
-
+                    if(buttonPaste){
+                        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                        String pasteData = "";
+                        if(!(clipboard.hasPrimaryClip())) {
+                        } else if (!(clipboard.getPrimaryClipDescription().hasMimeType(MIMETYPE_TEXT_PLAIN))) {
+                        } else {
+                            ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
+                            pasteData = item.getText().toString();
+                        }
+                        input.setText(pasteData);
+                    } else {
+                        pushMessage();
+                        sendImageButton.setBackgroundResource(R.drawable.send_button_paste_0);
+                    }
             }
         });
 
@@ -76,9 +115,17 @@ public class Main extends AppCompatActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if(event.getAction() == MotionEvent.ACTION_DOWN){
-                    sendImageButton.setBackgroundResource(R.drawable.send_button_decode_1);
+                    if(buttonPaste){
+                        sendImageButton.setBackgroundResource(R.drawable.send_button_paste_1);
+                    } else {
+                        sendImageButton.setBackgroundResource(R.drawable.send_button_decode_1);
+                    }
                 } else if(event.getAction() == MotionEvent.ACTION_UP){
-                    sendImageButton.setBackgroundResource(R.drawable.send_button_decode_0);
+                    if(buttonPaste){
+                        sendImageButton.setBackgroundResource(R.drawable.send_button_paste_0);
+                    } else {
+                        sendImageButton.setBackgroundResource(R.drawable.send_button_decode_0);
+                    }
                 }
                 return false;
             }
@@ -97,6 +144,31 @@ public class Main extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.options, menu);
+        menu.add(0, Menu.CATEGORY_CONTAINER, Menu.NONE, "Web Version").setIcon(R.drawable.send_button);
+        menu.getItem(0).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.thatemojiapp.com"));
+                startActivity(browserIntent);
+
+                return false;
+            }
+        });
+        menu.add(0, Menu.CATEGORY_CONTAINER, Menu.NONE, "Tell Friends").setIcon(R.drawable.send_button);
+        if(free){
+            menu.add(0, Menu.CATEGORY_CONTAINER, Menu.NONE, "Remove Ads").setIcon(R.drawable.send_button);
+        }
+        menu.add(0, Menu.CATEGORY_CONTAINER, Menu.NONE, "Settings").setIcon(R.drawable.send_button);
+        menu.add(0, Menu.CATEGORY_CONTAINER, Menu.NONE, "Help").setIcon(R.drawable.send_button);
+        return super.onCreateOptionsMenu(menu);
+    }
+
     private final String emo_regex = "([[\\uD83C-\\uDBFF\\uDC00-\\uDFFF]+])";
 
     public void pushMessage(){
@@ -104,7 +176,7 @@ public class Main extends AppCompatActivity {
         String message = input.getText().toString();
         //check if message is emojis or letters
             String ms = new String("");
-            if(message.length()>=2) {
+            if(message.length() >= 2) {
                 ms = message.substring(0, 2);
             }
             char mm = message.charAt(0);
@@ -124,5 +196,7 @@ public class Main extends AppCompatActivity {
         //After message has been converted
         input.setText("");
         countTextView.setText("0/160");
+        buttonPaste = true;
+
     }
 }
