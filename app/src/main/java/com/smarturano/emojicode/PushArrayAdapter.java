@@ -3,6 +3,7 @@ package com.smarturano.emojicode;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.Gravity;
@@ -40,12 +41,22 @@ public class PushArrayAdapter extends ArrayAdapter{
     public void add(TEMessage teMessage){
         teMessageList.add(teMessage);
         if(teMessage.left == false){
+           /*
             ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
             ClipData clip = ClipData.newPlainText("Emojicode message", teMessage.message);
             clipboard.setPrimaryClip(clip);
             Toast toast = Toast.makeText(context, "Message has been copied to clipboard.", Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER, 0, -100);
             toast.show();
+            */
+
+
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, "http://thatemojiapp.com/");
+            sendIntent.setType("text/plain");
+            getContext().startActivity(sendIntent);
+
         }
         super.add(teMessage);
     }

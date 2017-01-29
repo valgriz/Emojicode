@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,6 +24,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import static android.content.ClipDescription.MIMETYPE_TEXT_PLAIN;
 
@@ -67,6 +69,11 @@ public class Main extends AppCompatActivity {
                         if(!ms.matches(emo_regex)){ //character is an emoji
                             input.setText(input.getText().subSequence(0, input.length()-1));
                             input.setSelection(input.length()-1);
+
+                            Toast toast = Toast.makeText(getApplicationContext(), "Remove Ads to type more   characters.", Toast.LENGTH_SHORT);
+                            toast.setGravity(Gravity.CENTER, 0, -100);
+                            toast.show();
+
                         }
                     }
                 }
@@ -152,15 +159,26 @@ public class Main extends AppCompatActivity {
         menu.getItem(0).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-
-
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.thatemojiapp.com"));
                 startActivity(browserIntent);
-
                 return false;
             }
         });
         menu.add(0, Menu.CATEGORY_CONTAINER, Menu.NONE, "Tell Friends").setIcon(R.drawable.send_button);
+        menu.getItem(1).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, "\uD83D\uDC67\uD83D\uDE10\uD83E\uDD12\uD83D\uDC7D  \uD83D\uDE08\uD83D\uDE33\uD83D\uDE10  \uD83D\uDE26\uD83D\uDE0C  \uD83D\uDC6E\uD83D\uDE48\uD83D\uDE1E\uD83D\uDE18  \uD83D\uDC7D\uD83D\uDC6E\uD83D\uDE02\uD83D\uDE00\uD83D\uDE00  \uD83D\uDE14\uD83D\uDE15\uD83D\uDE26\uD83D\uDC6E\uD83D\uDE17\uD83D\uDE0A\n" +
+                        "\n" +
+                        "Decode this message using emojicode!\n" +
+                        "http://thatemojiapp.com/");
+                sendIntent.setType("text/plain");
+                startActivity(sendIntent);
+                return false;
+            }
+        });
         if(free){
             menu.add(0, Menu.CATEGORY_CONTAINER, Menu.NONE, "Remove Ads").setIcon(R.drawable.send_button);
         }
