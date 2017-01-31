@@ -1,9 +1,10 @@
-package com.smarturano.emojicode;
+package com.thatemojiapp.emojicode;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.Gravity;
@@ -41,22 +42,27 @@ public class PushArrayAdapter extends ArrayAdapter{
     public void add(TEMessage teMessage){
         teMessageList.add(teMessage);
         if(teMessage.left == false){
-           /*
-            ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-            ClipData clip = ClipData.newPlainText("Emojicode message", teMessage.message);
-            clipboard.setPrimaryClip(clip);
-            Toast toast = Toast.makeText(context, "Message has been copied to clipboard.", Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.CENTER, 0, -100);
-            toast.show();
-            */
 
+            final SharedPreferences sharedPref = getContext().getSharedPreferences("shareCM", Context.MODE_PRIVATE);
+            int shareCM = sharedPref.getInt("shareCM", 1);
+            int copyCM = sharedPref.getInt("copyCM", 0);
 
-            Intent sendIntent = new Intent();
-            sendIntent.setAction(Intent.ACTION_SEND);
-            sendIntent.putExtra(Intent.EXTRA_TEXT, "http://thatemojiapp.com/");
-            sendIntent.setType("text/plain");
-            getContext().startActivity(sendIntent);
+            if(shareCM == 1){
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, teMessage.message);
+                sendIntent.setType("text/plain");
+                getContext().startActivity(Intent.createChooser(sendIntent, "Send Emojicode to").setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            }
 
+            if(copyCM == 1){
+                ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("Emojicode message", teMessage.message);
+                clipboard.setPrimaryClip(clip);
+                Toast toast = Toast.makeText(context, "Message has been copied to clipboard.", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER, 0, -100);
+                toast.show();
+            }
         }
         super.add(teMessage);
     }

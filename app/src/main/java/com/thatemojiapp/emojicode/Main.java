@@ -1,11 +1,10 @@
-package com.smarturano.emojicode;
+package com.thatemojiapp.emojicode;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObserver;
-import android.graphics.Color;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,7 +20,6 @@ import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -70,7 +68,7 @@ public class Main extends AppCompatActivity {
                             input.setText(input.getText().subSequence(0, input.length()-1));
                             input.setSelection(input.length()-1);
 
-                            Toast toast = Toast.makeText(getApplicationContext(), "Remove Ads to type more   characters.", Toast.LENGTH_SHORT);
+                            Toast toast = Toast.makeText(getApplicationContext(), "Remove ads to type more characters.", Toast.LENGTH_SHORT);
                             toast.setGravity(Gravity.CENTER, 0, -100);
                             toast.show();
 
@@ -140,7 +138,6 @@ public class Main extends AppCompatActivity {
         pushArrayAdapter = new PushArrayAdapter(getApplicationContext(), R.layout.message_a);
         listView.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
         listView.setAdapter(pushArrayAdapter);
-
         //to scroll the list view to bottom on data change
         pushArrayAdapter.registerDataSetObserver(new DataSetObserver() {
             @Override
@@ -155,8 +152,7 @@ public class Main extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.options, menu);
-        menu.add(0, Menu.CATEGORY_CONTAINER, Menu.NONE, "Web Version").setIcon(R.drawable.send_button);
-        menu.getItem(0).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+        menu.add(0, Menu.CATEGORY_CONTAINER, Menu.NONE, "Web Version").setIcon(R.drawable.send_button).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.thatemojiapp.com"));
@@ -164,15 +160,14 @@ public class Main extends AppCompatActivity {
                 return false;
             }
         });
-        menu.add(0, Menu.CATEGORY_CONTAINER, Menu.NONE, "Tell Friends").setIcon(R.drawable.send_button);
-        menu.getItem(1).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+        menu.add(0, Menu.CATEGORY_CONTAINER, Menu.NONE, "Tell Friends").setIcon(R.drawable.send_button).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, "\uD83D\uDC67\uD83D\uDE10\uD83E\uDD12\uD83D\uDC7D  \uD83D\uDE08\uD83D\uDE33\uD83D\uDE10  \uD83D\uDE26\uD83D\uDE0C  \uD83D\uDC6E\uD83D\uDE48\uD83D\uDE1E\uD83D\uDE18  \uD83D\uDC7D\uD83D\uDC6E\uD83D\uDE02\uD83D\uDE00\uD83D\uDE00  \uD83D\uDE14\uD83D\uDE15\uD83D\uDE26\uD83D\uDC6E\uD83D\uDE17\uD83D\uDE0A\n" +
+                sendIntent.putExtra(Intent.EXTRA_TEXT, "\uD83D\uDE07\uD83D\uDE35\uD83D\uDC75\uD83D\uDE13\uD83D\uDE13\uD83E\uDD14\uD83D\uDE10\uD83D\uDE08\uD83D\uDE13  \uD83D\uDE18\uD83D\uDE00  \uD83D\uDE18\uD83D\uDC76\uD83D\uDE26\uD83D\uDE17" +
                         "\n" +
-                        "Decode this message using emojicode!\n" +
+                        "Decode this using emojicode!    \n" +
                         "http://thatemojiapp.com/");
                 sendIntent.setType("text/plain");
                 startActivity(sendIntent);
@@ -180,10 +175,30 @@ public class Main extends AppCompatActivity {
             }
         });
         if(free){
-            menu.add(0, Menu.CATEGORY_CONTAINER, Menu.NONE, "Remove Ads").setIcon(R.drawable.send_button);
+            menu.add(0, Menu.CATEGORY_CONTAINER, Menu.NONE, "Remove Ads").setIcon(R.drawable.send_button).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+
+                    return false;
+                }
+            });
         }
-        menu.add(0, Menu.CATEGORY_CONTAINER, Menu.NONE, "Settings").setIcon(R.drawable.send_button);
-        menu.add(0, Menu.CATEGORY_CONTAINER, Menu.NONE, "Help").setIcon(R.drawable.send_button);
+        menu.add(0, Menu.CATEGORY_CONTAINER, Menu.NONE, "Settings").setIcon(R.drawable.send_button).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent settingIntent = new Intent(getApplicationContext(), Settings.class);
+                startActivity(settingIntent);
+                return false;
+            }
+        });
+        menu.add(0, Menu.CATEGORY_CONTAINER, Menu.NONE, "Help").setIcon(R.drawable.send_button).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent settingIntent = new Intent(getApplicationContext(), Help.class);
+                startActivity(settingIntent);
+                return false;
+            }
+        });
         return super.onCreateOptionsMenu(menu);
     }
 

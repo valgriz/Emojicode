@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_help"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.thatemojiapp.emojicode.Help">
+
+    <TextView
+        android:text="Emojicode"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView3"
+        android:gravity="center_vertical"
+        android:textAlignment="center"
+        android:fontFamily="sans-serif"
+        android:textStyle="normal|bold"
+        android:textSize="24sp"
+        android:layout_marginTop="20dp"/>
+    <TextView
+        android:text="v1.0.1a"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView4"
+        android:gravity="center_vertical"
+        android:textAlignment="center"
+        android:fontFamily="sans-serif"
+        android:textStyle="normal"
+        android:textSize="12sp"
+        android:layout_marginTop="0dp"/>
+
+    <TextView
+        android:text="Use Emojicode to send fun emojicoded messages to your friends and family."
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView5"
+        android:gravity="center_vertical"
+        android:textAlignment="center"
+        android:fontFamily="sans-serif"
+        android:textStyle="normal"
+        android:textSize="16sp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:layout_marginTop="12dp"/>
+
+    <TextView
+        android:text="How to Use"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView7"
+        android:gravity="center_vertical"
+        android:textAlignment="center"
+        android:fontFamily="sans-serif"
+        android:textStyle="normal|bold"
+        android:textSize="18sp"
+        android:layout_marginTop="12dp"/>
+
+    <TextView
+        android:text="1. Type in the message box.\n2. Tap the convert button to emojicode.\n3.Once converted, you will be prompted to share the message.  Tap message bubble to instantaneously copy message to clipboard.\n4. To decode an emoji'd message, simply tap the paste button (right of message box), then click convert."
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView6"
+        android:gravity="center_vertical"
+        android:textAlignment="center"
+        android:fontFamily="sans-serif"
+        android:textStyle="normal"
+        android:textSize="16sp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_marginTop="12dp"/>
+
+    <TextView
+        android:text="
+\n\n
+Emojicode does not use a secure form of encryption.\n
+"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/textView2"
+        android:gravity="center_vertical"
+        android:textAlignment="center"
+        android:fontFamily="sans-serif" />
+</LinearLayout>

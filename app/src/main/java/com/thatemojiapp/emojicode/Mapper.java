@@ -1,4 +1,4 @@
-package com.smarturano.emojicode;
+package com.thatemojiapp.emojicode;
 
 /**
  * Created by Steven on 1/26/2017.

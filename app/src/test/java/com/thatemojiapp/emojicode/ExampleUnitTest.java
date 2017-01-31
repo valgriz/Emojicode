@@ -1,4 +1,4 @@
-package com.smarturano.emojicode;
+package com.thatemojiapp.emojicode;
 
 import org.junit.Test;
 
