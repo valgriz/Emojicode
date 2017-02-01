@@ -12,9 +12,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.vision.Frame;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,11 +46,13 @@ public class PushArrayAdapter extends ArrayAdapter{
         return this.teMessageList.size();
     }
 
+
+
     public void add(TEMessage teMessage){
         teMessageList.add(teMessage);
         if(teMessage.left == false){
 
-            final SharedPreferences sharedPref = getContext().getSharedPreferences("shareCM", Context.MODE_PRIVATE);
+            final SharedPreferences sharedPref = getContext().getSharedPreferences("pref", Context.MODE_PRIVATE);
             int shareCM = sharedPref.getInt("shareCM", 1);
             int copyCM = sharedPref.getInt("copyCM", 0);
 

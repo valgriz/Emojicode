@@ -58,7 +58,7 @@
         android:layout_marginTop="12dp"/>
 
     <TextView
-        android:text="1. Type in the message box.\n2. Tap the convert button to emojicode.\n3.Once converted, you will be prompted to share the message.  Tap message bubble to instantaneously copy message to clipboard.\n4. To decode an emoji'd message, simply tap the paste button (right of message box), then click convert."
+        android:text="1. Type in the message box.\n2. Tap the convert button to encode.\n3. Once converted, you can share the message or tap message bubble to copy to clipboard.\n4. To decode an emoji'd message, simply tap the paste button (right of message box), then click convert."
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/textView6"
@@ -72,14 +72,62 @@
         android:layout_marginTop="12dp"/>
 
     <TextView
-        android:text="
-\n\n
-Emojicode does not use a secure form of encryption.\n
-"
+        android:text="FAQ"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView9"
+        android:gravity="center_vertical"
+        android:textAlignment="center"
+        android:fontFamily="sans-serif"
+        android:textStyle="normal|bold"
+        android:textSize="18sp"
+        android:layout_marginTop="12dp"/>
+
+    <TextView
+        android:text="For frequently asked questions and answers, please refer to the Emojicode website."
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView2"
+        android:textAlignment="center"
+        android:fontFamily="sans-serif" />
+
+    <TextView
+        android:text="http://thatemojiapp.com/faq"
+        android:autoLink="web"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView11"
+        android:textAlignment="center"
+        android:fontFamily="sans-serif" />
+
+    <TextView
+        android:text="Warning"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView8"
+        android:gravity="center_vertical"
+        android:textAlignment="center"
+        android:fontFamily="sans-serif"
+        android:textStyle="normal|bold"
+        android:textSize="18sp"
+        android:layout_marginTop="12dp"/>
+
+
+    <TextView
+        android:text="Emojicode does not use a secure form of encryption.\n  To be used for entertainment purposes only."
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView10"
+        android:textAlignment="center"
+        android:fontFamily="sans-serif" />
+
+    <TextView
+        android:text="Designed by Steven Marturano, 2017"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
-        android:id="@+id/textView2"
-        android:gravity="center_vertical"
+        android:gravity="bottom"
+        android:layout_marginBottom="20dp"
+        android:id="@+id/textView99"
         android:textAlignment="center"
         android:fontFamily="sans-serif" />
 </LinearLayout>

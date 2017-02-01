@@ -4,6 +4,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.DataSetObserver;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +25,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+
 import static android.content.ClipDescription.MIMETYPE_TEXT_PLAIN;
 
 public class Main extends AppCompatActivity {
@@ -32,8 +37,10 @@ public class Main extends AppCompatActivity {
     EditText input;
     PushArrayAdapter pushArrayAdapter;
     ListView listView;
-    Boolean free = true;
     Boolean buttonPaste = true;
+
+    SharedPreferences sharedPref;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +57,17 @@ public class Main extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.messagesScrollList);
         listView.setAdapter(pushArrayAdapter);
         final ImageButton sendImageButton = (ImageButton) findViewById(R.id.sendImageButton);
+        sharedPref = getApplicationContext().getSharedPreferences("pref", Context.MODE_PRIVATE);
 
+        AdView mAdView = (AdView) findViewById(R.id.adView);
+        if(sharedPref.getBoolean("free", true)) {
+            MobileAds.initialize(getApplicationContext(), "ca-app-pub-5725702906096392~2490916261");
+
+            AdRequest adRequest = new AdRequest.Builder().addTestDevice("516A2A7A13BDC42C469EB9E4E319AF66").build();
+            mAdView.loadAd(adRequest);
+        } else {
+            mAdView.setVisibility(View.GONE);
+        }
         input.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -60,7 +77,7 @@ public class Main extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 countTextView.setText(input.getText().length() + "/160");
-                if(free){
+                if(sharedPref.getBoolean("free", true)){
                     if(input.getText().length() > 160){
                         String message = input.getText().toString();
                         String ms = message.substring(0, 2);
@@ -174,11 +191,11 @@ public class Main extends AppCompatActivity {
                 return false;
             }
         });
-        if(free){
+
+        if(sharedPref.getBoolean("free", true)){
             menu.add(0, Menu.CATEGORY_CONTAINER, Menu.NONE, "Remove Ads").setIcon(R.drawable.send_button).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
-
                     return false;
                 }
             });
@@ -221,6 +238,25 @@ public class Main extends AppCompatActivity {
             } else if((mm >= 33) && (mm <= 126)){ //character is a letter
                 String ps = Converter.textToEmoji(message);
                 if(!ps.equals("")) {
+                    if(ps.equals("\uD83D\uDE20\uD83D\uDE10\uD83D\uDE3C\uD83D\uDE0C\uD83D\uDC7E  \uD83D\uDE16\uD83D\uDE14  \uD83D\uDE26\uD83D\uDE48\uD83D\uDE27  \uD83D\uDE14\uD83D\uDE16\uD83D\uDE26  \uD83D\uDC80\uD83D\uDE0B\uD83D\uDE40\uD83D\uDE05")){
+
+                        if(sharedPref != null){
+                            SharedPreferences.Editor editor = sharedPref.edit();
+                            if(sharedPref.getBoolean("free", true)){
+                                editor.putBoolean("free", false);
+                                editor.commit();
+                                Toast toast = Toast.makeText(getApplicationContext(), "App activated.", Toast.LENGTH_SHORT);
+                                toast.setGravity(Gravity.CENTER, 0, -100);
+                                toast.show();
+                            } else {
+                                editor.putBoolean("free", true);
+                                editor.commit();
+                                Toast toast = Toast.makeText(getApplicationContext(), "App deactivated.", Toast.LENGTH_SHORT);
+                                toast.setGravity(Gravity.CENTER, 0, -100);
+                                toast.show();
+                            }
+                        }
+                    }
                     pushArrayAdapter.add(new TEMessage(false, ps));
                 }
             }

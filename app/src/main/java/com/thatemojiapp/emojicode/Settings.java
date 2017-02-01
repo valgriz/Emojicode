@@ -30,7 +30,7 @@ public class Settings extends AppCompatActivity {
         final RadioButton rbSetting2Yes = (RadioButton) findViewById(R.id.rbSetting2Yes);
         final RadioButton rbSetting2No = (RadioButton) findViewById(R.id.rbSetting2No);
 
-        final SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("shareCM", Context.MODE_PRIVATE);
+        final SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("pref", Context.MODE_PRIVATE);
         int shareCM = sharedPref.getInt("shareCM", 1);
         int copyCM = sharedPref.getInt("copyCM", 0);
 
