@@ -1,12 +1,16 @@
 package com.thatemojiapp.emojicode;
 
+import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.database.DataSetObserver;
 import android.net.Uri;
+import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -25,9 +29,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.vending.billing.IInAppBillingService;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+import com.thatemojiapp.emojicode.util.IabHelper;
+import com.thatemojiapp.emojicode.util.IabResult;
+import com.thatemojiapp.emojicode.util.Inventory;
+import com.thatemojiapp.emojicode.util.Purchase;
 
 import static android.content.ClipDescription.MIMETYPE_TEXT_PLAIN;
 
@@ -41,7 +50,10 @@ public class Main extends AppCompatActivity {
 
     SharedPreferences sharedPref;
 
-
+    private static final String TAG = "InAppBilling";
+    IabHelper mHelper;
+    static final  String ITEM_SKU = "com.thatemojiapp.removeads";
+    String base64EncodedPublicKey;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,10 +71,23 @@ public class Main extends AppCompatActivity {
         final ImageButton sendImageButton = (ImageButton) findViewById(R.id.sendImageButton);
         sharedPref = getApplicationContext().getSharedPreferences("pref", Context.MODE_PRIVATE);
 
+        base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxR0U1jZPbxniuoPXVsTjNZhbjTZFUBgrcgrjZvthSj7Pl+sWEMUZhbLvIeGCyoatuzYNes8kDX/pL81o4KId6LDDgqzDgK3H8pS24rYIodxN59bouy/AoyBL0P408hJHnMY3SKDZXSvMsnkBh4VtSp74VyDNQo9qQo0gCOeasK8C6yPW6pDmjdeXXOk48zNyQ+FlRiHwMhl6koJYkWO0fXsHFyjdSzyHzqDqnsgDKfKbk1xQc2mathLB7cb1J5KOYM30Sy0OCcslpAUHWWfYT0WH53Mh6s6QbjdCF5AZ3S86ArBk85vrdvImGxXt26YOopRNSDU9BnZlB263sRGciwIDAQAB";
+        mHelper = new IabHelper(this, base64EncodedPublicKey);
+        mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
+            @Override
+            public void onIabSetupFinished(IabResult result) {
+                if(!result.isSuccess()){
+
+                } else {
+
+                }
+            }
+        });
+
+
         AdView mAdView = (AdView) findViewById(R.id.adView);
         if(sharedPref.getBoolean("free", true)) {
             MobileAds.initialize(getApplicationContext(), "ca-app-pub-5725702906096392~2490916261");
-
             AdRequest adRequest = new AdRequest.Builder().addTestDevice("516A2A7A13BDC42C469EB9E4E319AF66").build();
             mAdView.loadAd(adRequest);
         } else {
@@ -193,9 +218,16 @@ public class Main extends AppCompatActivity {
         });
 
         if(sharedPref.getBoolean("free", true)){
+            final Activity s = this;
             menu.add(0, Menu.CATEGORY_CONTAINER, Menu.NONE, "Remove Ads").setIcon(R.drawable.send_button).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
+                    mHelper.launchPurchaseFlow(s, ITEM_SKU, 10001, new IabHelper.OnIabPurchaseFinishedListener() {
+                        @Override
+                        public void onIabPurchaseFinished(IabResult result, Purchase info) {
+
+                        }
+                    }, "purchasetoken");
                     return false;
                 }
             });
@@ -217,6 +249,60 @@ public class Main extends AppCompatActivity {
             }
         });
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(!mHelper.handleActivityResult(requestCode, resultCode, data)) {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
+        @Override
+        public void onIabPurchaseFinished(IabResult result, Purchase info) {
+            if(result.isFailure()){
+                return;
+            } else if(info.getSku().equals(ITEM_SKU)){
+                consumeItem();
+            }
+        }
+    };
+
+
+    public void consumeItem(){
+        mHelper.queryInventoryAsync(new IabHelper.QueryInventoryFinishedListener() {
+            @Override
+            public void onQueryInventoryFinished(IabResult result, Inventory inv) {
+                if(result.isFailure()){
+
+                } else {
+                    mHelper.consumeAsync(inv.getPurchase(ITEM_SKU), new IabHelper.OnConsumeFinishedListener() {
+                        @Override
+                        public void onConsumeFinished(Purchase purchase, IabResult result) {
+                            if(result.isSuccess()){
+                                //App is now activated
+                                SharedPreferences.Editor editor = sharedPref.edit();
+                                editor.putBoolean("free", false);
+                                editor.commit();
+                                Toast toast = Toast.makeText(getApplicationContext(), "App activated.", Toast.LENGTH_SHORT);
+                                toast.setGravity(Gravity.CENTER, 0, -100);
+                                toast.show();
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(mHelper != null){
+            mHelper.dispose();
+            mHelper = null;
+        }
     }
 
     private final String emo_regex = "([[\\uD83C-\\uDBFF\\uDC00-\\uDFFF]+])";
