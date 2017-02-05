@@ -52,7 +52,8 @@ public class Main extends AppCompatActivity {
 
     private static final String TAG = "InAppBilling";
     IabHelper mHelper;
-    static final  String ITEM_SKU = "com.thatemojiapp.removeads";
+    //static final  String ITEM_SKU = "com.thatemojiapp.removeads";
+    static final  String ITEM_SKU = "android.test.purchased";
     String base64EncodedPublicKey;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,11 +85,10 @@ public class Main extends AppCompatActivity {
             }
         });
 
-
         AdView mAdView = (AdView) findViewById(R.id.adView);
         if(sharedPref.getBoolean("free", true)) {
             MobileAds.initialize(getApplicationContext(), "ca-app-pub-5725702906096392~2490916261");
-            AdRequest adRequest = new AdRequest.Builder().addTestDevice("516A2A7A13BDC42C469EB9E4E319AF66").build();
+            AdRequest adRequest = new AdRequest.Builder().build();
             mAdView.loadAd(adRequest);
         } else {
             mAdView.setVisibility(View.GONE);
@@ -151,6 +151,7 @@ public class Main extends AppCompatActivity {
                             pasteData = item.getText().toString();
                         }
                         input.setText(pasteData);
+                        input.setSelection(input.length());
                     } else {
                         pushMessage();
                         sendImageButton.setBackgroundResource(R.drawable.send_button_paste_0);
@@ -271,6 +272,7 @@ public class Main extends AppCompatActivity {
 
 
     public void consumeItem(){
+
         mHelper.queryInventoryAsync(new IabHelper.QueryInventoryFinishedListener() {
             @Override
             public void onQueryInventoryFinished(IabResult result, Inventory inv) {

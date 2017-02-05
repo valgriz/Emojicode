@@ -20,7 +20,7 @@
         android:textSize="24sp"
         android:layout_marginTop="20dp"/>
     <TextView
-        android:text="v1.0.1a"
+        android:text="v1.0.2a"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/textView4"
